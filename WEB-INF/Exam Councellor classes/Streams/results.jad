@@ -1,0 +1,99 @@
+// Decompiled by DJ v3.5.5.77 Copyright 2003 Atanas Neshkov  Date: 2/23/2000 4:15:12 PM
+// Home Page : http://members.fortunecity.com/neshkov/dj.html  - Check often for new version!
+// Decompiler options: packimports(3) 
+// Source File Name:   results.java
+
+package lalith;
+
+import java.io.*;
+import java.sql.*;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.*;
+
+public class results extends HttpServlet
+{
+
+    public results()
+    {
+    }
+
+    public void init(ServletConfig servletconfig)
+        throws ServletException
+    {
+        Object obj = null;
+        Object obj1 = null;
+        super.init(servletconfig);
+    }
+
+    public void service(HttpServletRequest httpservletrequest, HttpServletResponse httpservletresponse)
+        throws ServletException, IOException
+    {
+        try
+        {
+            Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+            Connection connection = DriverManager.getConnection("jdbc:odbc:exam", "exam", "exam");
+            httpservletresponse.setContentType("text/html");
+            PrintWriter printwriter = httpservletresponse.getWriter();
+            String s = httpservletrequest.getParameter("result").toString();
+            System.out.println("result value=" + s);
+            String s1 = "";
+            if(s.equals("me"))
+                s1 = "select * from engg where sno in (select sno from studentInfo where gender='male') order by rank";
+            else
+            if(s.equals("fe"))
+                s1 = "select * from engg where sno in (select sno from studentInfo where gender='female') order by rank";
+            else
+            if(s.equals("mm"))
+                s1 = "select * from medico where sno in(select sno from studentInfo where gender='male') order by rank";
+            else
+            if(s.equals("fm"))
+                s1 = "select * from medico where sno in(select sno from studentInfo where gender='female') order by rank";
+            Statement statement = connection.createStatement();
+            ResultSet resultset = statement.executeQuery(s1);
+            printwriter.println("<html><body><center>");
+            printwriter.println("<table border=1><tr><th>studentno</th><th>studentname</th>");
+            if(s.equals("mm") || s.equals("fm"))
+                printwriter.println("<th>botony</th><th>zeology</th>");
+            else
+                printwriter.println("<th>maths</th>");
+            printwriter.println("<th>physics</th><th>chemistry</th><th>total</th>");
+            printwriter.println("<th>rank</th></tr>");
+            while(resultset.next()) 
+            {
+                System.out.println("resultset ");
+                printwriter.println("<tr><td>" + resultset.getInt(2) + "</td>");
+                printwriter.println("<td>" + resultset.getString(3) + "</td>");
+                if(s.equals("mm") || s.equals("fm"))
+                {
+                    printwriter.println("<td>" + resultset.getInt(4) + "</td>");
+                    printwriter.println("<td>" + resultset.getInt(5) + "</td>");
+                    printwriter.println("<td>" + resultset.getInt(6) + "</td>");
+                    printwriter.println("<td>" + resultset.getInt(7) + "</td>");
+                    printwriter.println("<td>" + resultset.getInt(8) + "</td>");
+                    printwriter.println("<td>" + resultset.getInt(9) + "</td>");
+                } else
+                {
+                    printwriter.println("<td>" + resultset.getInt(4) + "</td>");
+                    printwriter.println("<td>" + resultset.getInt(5) + "</td>");
+                    printwriter.println("<td>" + resultset.getInt(6) + "</td>");
+                    printwriter.println("<td>" + resultset.getInt(7) + "</td>");
+                    printwriter.println("<td>" + resultset.getInt(8) + "</td>");
+                }
+            }
+            printwriter.println("</table>");
+            printwriter.println("<a href='examresult.jsp'>back</a>");
+            printwriter.println("</center></body></html>");
+        }
+        catch(SQLException sqlexception)
+        {
+            sqlexception.printStackTrace();
+            System.out.println("sqlexception");
+        }
+        catch(Exception exception)
+        {
+            exception.printStackTrace();
+            System.out.println("exception");
+        }
+    }
+}

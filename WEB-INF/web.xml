@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+<servlet>
+	<servlet-name>log</servlet-name>
+	<servlet-class>lalith.login</servlet-class>
+</servlet>
+<servlet>
+	<servlet-name>exam</servlet-name>
+	<servlet-class>lalith.examregister</servlet-class>
+</servlet>
+<servlet>
+	<servlet-name>result</servlet-name>
+	<servlet-class>lalith.results</servlet-class>
+</servlet>
+<servlet>
+	<servlet-name>lalith.marksentry</servlet-name>
+	<servlet-class>lalith.marksentry</servlet-class>
+</servlet>
+<servlet>
+	<servlet-name>student</servlet-name>
+	<servlet-class>lalith.student</servlet-class>
+</servlet>
+<servlet>
+	<servlet-name>district</servlet-name>
+	<servlet-class>lalith.districtresult</servlet-class>
+</servlet>	
+<servlet>
+	<servlet-name>stureg</servlet-name>
+	<servlet-class>lalith.studentregistration</servlet-class>
+</servlet>
+<servlet>
+	<servlet-name>medico</servlet-name>
+	<servlet-class>lalith.medicomarksentry</servlet-class>
+</servlet>
+<servlet-mapping>
+ 	<servlet-name>log</servlet-name>
+	<url-pattern>/log</url-pattern>
+</servlet-mapping>
+ <servlet-mapping>
+	<servlet-name>exam</servlet-name>
+	<url-pattern>/exam</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>result</servlet-name>
+	<url-pattern>/result</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>lalith.marksentry</servlet-name>
+	<url-pattern>/marksentry</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>student</servlet-name>
+	<url-pattern>/student</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>district</servlet-name>
+	<url-pattern>/district</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>stureg</servlet-name>
+	<url-pattern>/stureg</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>medico</servlet-name>
+	<url-pattern>/medico</url-pattern>
+</servlet-mapping>
+<welcome-file-list>
+	<welcome-file>logout.jsp</welcome-file>
+</welcome-file-list>
+</web-app>

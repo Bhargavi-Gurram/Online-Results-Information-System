@@ -1,0 +1,115 @@
+// Decompiled by DJ v3.5.5.77 Copyright 2003 Atanas Neshkov  Date: 2/22/2000 7:40:56 PM
+// Home Page : http://members.fortunecity.com/neshkov/dj.html  - Check often for new version!
+// Decompiler options: packimports(3) 
+// Source File Name:   marksentry.java
+
+package lalith;
+
+import java.io.*;
+import java.sql.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+// Referenced classes of package lalith:
+//            myconnection
+
+public class marksentry extends HttpServlet
+{
+
+    public marksentry()
+    {
+    }
+
+    public void init(ServletConfig servletconfig)
+        throws ServletException
+    {
+        super.init(servletconfig);
+    }
+
+    public void service(HttpServletRequest httpservletrequest, HttpServletResponse httpservletresponse)
+        throws ServletException, IOException
+    {
+        try
+        {
+            Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+            Connection connection = DriverManager.getConnection("jdbc:odbc:exam", "exam", "exam");
+            httpservletresponse.setContentType("text/html");
+            PrintWriter printwriter = httpservletresponse.getWriter();
+            System.out.println("entered into marks entry form");
+            myconnection myconnection1 = new myconnection();
+            myconnection1.mycon();
+            int i = Integer.parseInt(httpservletrequest.getParameter("maths"));
+            System.out.println(i);
+            int j = Integer.parseInt(httpservletrequest.getParameter("physics"));
+            System.out.println(j);
+            int k = Integer.parseInt(httpservletrequest.getParameter("chemistry"));
+            System.out.println(k);
+            if(i <= 0 || i > 100 || j <= 0 || j > 100 || k <= 0 || k > 100)
+            {
+                RequestDispatcher requestdispatcher = httpservletrequest.getRequestDispatcher("/marksentryform.jsp");
+                requestdispatcher.include(httpservletrequest, httpservletresponse);
+                printwriter.println("<html><body><center>Invalid marks</center></body></html>");
+            } else
+            {
+                myconnection1.pst = myconnection1.con.prepareStatement("insert into engg values(?,?,?,?,?,?,?,?)");
+                int l = Integer.parseInt(httpservletrequest.getParameter("sno"));
+                System.out.println("sno=" + l);
+                myconnection1.pst.setInt(1, Integer.parseInt(httpservletrequest.getParameter("sno")));
+                int i1 = Integer.parseInt(httpservletrequest.getParameter("hno"));
+                myconnection1.pst.setInt(2, i1);
+                Statement statement = connection.createStatement();
+                ResultSet resultset = statement.executeQuery("select hno from engg where hno=" + i1);
+                if(resultset.next())
+                {
+                    RequestDispatcher requestdispatcher1 = httpservletrequest.getRequestDispatcher("/marksentryform.jsp");
+                    requestdispatcher1.include(httpservletrequest, httpservletresponse);
+                    printwriter.println("Hall Ticket Number Already exists");
+                } else
+                {
+                    ResultSet resultset1 = statement.executeQuery("select sno,sname from studentInfo where sno=" + l);
+                    resultset1.next();
+                    String s = resultset1.getString("sname");
+                    System.out.println(s);
+                    myconnection1.pst.setString(3, s);
+                    myconnection1.pst.setInt(4, Integer.parseInt(httpservletrequest.getParameter("maths")));
+                    myconnection1.pst.setInt(5, Integer.parseInt(httpservletrequest.getParameter("physics")));
+                    myconnection1.pst.setInt(6, Integer.parseInt(httpservletrequest.getParameter("chemistry")));
+                    int j1 = i + j + k;
+                    System.out.println(j1);
+                    myconnection1.pst.setInt(7, j1);
+                    myconnection1.pst.setInt(8, 0);
+                    myconnection1.pst.executeUpdate();
+                    Statement statement1 = connection.createStatement();
+                    Statement statement2 = connection.createStatement();
+                    ResultSet resultset2 = statement1.executeQuery("select * from engg order by total desc");
+                    int k1 = 1;
+                    int l1 = 1;
+                    int i2 = 0;
+                    int j2 = 0;
+                    for(; resultset2.next(); System.out.println("  Rank" + l1))
+                    {
+                        System.out.print("In while @@@@@@@@@@@@@@@@@@@");
+                        if(k1 > 1)
+                            i2 = j2;
+                        j2 = resultset2.getInt(7);
+                        if(i2 > j2)
+                            l1 = k1;
+                        statement2.executeUpdate("update engg set  rank=" + l1 + " where hno=" + resultset2.getInt(2));
+                        k1++;
+                    }
+
+                    printwriter.println("<html><body><center><b>successfully inserted</b><br><br><hr>");
+                    printwriter.println("<a href='marksentryform.jsp'>BACK</a></center></body></html>");
+                }
+            }
+        }
+        catch(SQLException sqlexception)
+        {
+            sqlexception.printStackTrace();
+        }
+        catch(Exception exception)
+        {
+            exception.printStackTrace();
+        }
+    }
+}
